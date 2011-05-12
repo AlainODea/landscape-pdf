@@ -1,0 +1,1 @@
+Classpath resources go in here.  All files will be available on the test classpath as they appear.

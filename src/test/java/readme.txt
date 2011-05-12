@@ -1,0 +1,1 @@
+Java source files go in here.  Only compiled output will be available on the test classpath.
