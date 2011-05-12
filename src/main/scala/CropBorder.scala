@@ -4,8 +4,6 @@ import com.lowagie.text.pdf.PdfReader
 import com.lowagie.text.pdf.PdfWriter
 import java.io.{File, FileOutputStream}
 import uk.co.flamingpenguin.jewel.cli
-import uk.co.flamingpenguin.jewel.cli.CliFactory.parseArguments
-import uk.co.flamingpenguin.jewel.cli.ArgumentValidationException
 
 object CropBorder {
   trait Croperation {
@@ -18,9 +16,9 @@ object CropBorder {
 
   def main(args: Array[String]) {
     try {
-      crop(parseArguments(classOf[Croperation], args:_*))
+      crop(cli.CliFactory.parseArguments(classOf[Croperation], args:_*))
     } catch {
-      case e: ArgumentValidationException => println(e getMessage)
+      case e: cli.ArgumentValidationException => println(e getMessage)
     }
   }
 
