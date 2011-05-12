@@ -38,7 +38,7 @@ object CropBorder {
     val outputDirectContent = writer.getDirectContent
     for (i <- 1 to reader.getNumberOfPages) {
       // add handling of title, left and right pages
-      document.newPage
+      document.newPage()
       val page = writer.getImportedPage(reader, i)
       outputDirectContent.addTemplate(page, factor, 0, 0, factor, left, down)
     }
