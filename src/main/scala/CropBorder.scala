@@ -3,27 +3,32 @@ import com.lowagie.text.Rectangle
 import com.lowagie.text.pdf.PdfReader
 import com.lowagie.text.pdf.PdfWriter
 import java.io.{File, FileOutputStream}
-import uk.co.flamingpenguin.jewel.cli
+import org.clapper.argot._
 
 object CropBorder {
-  trait Croperation {
-    @cli.Option(longName = "in", defaultValue = Array("in.pdf")) def input: File
-    @cli.Option(longName = "out", defaultValue = Array("out.pdf")) def output: File
-    @cli.Option(defaultValue = Array("1")) def factor: Float
-    @cli.Option(defaultValue = Array("0")) def left: Float
-    @cli.Option(defaultValue = Array("0")) def down: Float
-  }
+  import ArgotConverters._
+  implicit def convertFile(string: String, option: CommandLineArgument[File]): File =
+    new File(string)
+
+  val parser = new ArgotParser("CropBorder")
+  val inputOption = parser.option[File]("in", "input_file", "PDF File to convert")
+  val outputOption = parser.option[File]("out", "output_file", "PDF File to create")
+  val factorOption = parser.option[Float](List("f", "factor"), "factor", "Scaling factor")
+  val leftOption = parser.option[Float](List("l", "left"), "left", "Left edge offset")
+  val downOption = parser.option[Float](List("d", "down"), "down", "Top edge offset")
 
   def main(args: Array[String]) {
-    try {
-      crop(cli.CliFactory.parseArguments(classOf[Croperation], args:_*))
-    } catch {
-      case e: cli.ArgumentValidationException => println(e getMessage)
-    }
+    crop(args)
   }
 
-  def crop(croperation: Croperation) {
-    import croperation._
+  def crop(args: Array[String]) {
+    parser.parse(args)
+    val input = (inputOption.value.get)
+    val output = (outputOption.value.get)
+    val factor = (factorOption.value.get)
+    val left = (leftOption.value.get)
+    val down = (downOption.value.get)
+
     println(<text>Converting: {input} to {output} scaling by {factor} shifting by ({left}, {down})</text>.text)
     val reader = new PdfReader(input.getAbsolutePath)
     //val psize: Rectangle = reader.getPageSize(1)
